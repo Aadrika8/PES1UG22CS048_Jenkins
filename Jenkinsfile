@@ -1,35 +1,36 @@
 pipeline {
-    agent any  // Runs on any available Jenkins agent
-
-    stages {
-        stage('Clone Repository') {
-            steps {
-                checkout scm  // Checkout the latest code from GitHub
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'g++ hello.cpp -o output'  // Compile the C++ program
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh './output'  // Run the compiled program
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deployment successful!'  // Simulate deployment step
-            }
+    agent {
+        docker {
+            image 'node:14'
         }
     }
-
-    post {
-        failure {
-            echo 'Pipeline failed'  // Display message if any stage fails
+    stages {
+        stage('Clone repository') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/aadrika8/YPES1UG22CS048_Jenkins.git'
+            }
+        }
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Build application') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+        stage('Test application') {
+            steps {
+                sh 'npm test'
+            }
+        }
+        stage('Push Docker image') {
+            steps {
+                sh 'docker build -t pes1ug22cs048/jenkinsE:$BUILD_NUMBER .'
+                sh 'docker push pes1ug22cs048/jenkins:$BUILD_NUMBER'
+            }
         }
     }
 }
