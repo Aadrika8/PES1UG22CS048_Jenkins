@@ -4,28 +4,26 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'g++ -o YOUR_SRN-1 hello.cpp'
-                echo 'Build Stage Successful'
+                sh 'g++ main.cpp -o output'
             }
         }
 
         stage('Test') {
             steps {
-                sh './YOUR_SRN-1'
-                echo 'Test Stage Successful'
+                sh './output'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deployment Successful'
+                echo 'Deployment complete!'
             }
         }
     }
 
     post {
         failure {
-            echo 'Pipeline failed'
+            echo 'Pipeline failed!'
         }
     }
 }
