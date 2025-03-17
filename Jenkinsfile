@@ -1,22 +1,26 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
-                sh 'g++ -o output YOUR_SRN.cpp' // Introduce an error by misspelling 'g++'
+                sh 'g++ main.cpp -o YOUR_SRN-1'
             }
         }
+
         stage('Test') {
             steps {
-                sh './output' 
+                sh './YOUR_SRN-1'
             }
         }
+
         stage('Deploy') {
             steps {
-                echo 'Deploying application...'
+                echo 'Deployment complete!'
             }
         }
     }
+
     post {
         failure {
             echo 'Pipeline failed!'
